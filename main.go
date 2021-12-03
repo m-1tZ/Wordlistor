@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -15,6 +16,7 @@ var (
 	sanitizedStack string
 	wordlistFolder *string
 	filePaths []string
+	final []byte
 	tmpFile *os.File
 	stackItems []string
 	wordlists []string
@@ -61,13 +63,17 @@ func main() {
 			if strings.Contains(strings.ToLower(strings.TrimSuffix(path,".txt")),strings.ToLower(tech)){
 				if !stringInSlice(path,wordlists){
 					wordlists = append(wordlists, path)
+					//fmt.Println(wordlists)
 					file, _ := os.OpenFile(filepath.Join(*wordlistFolder,path),os.O_RDONLY,0644)
 					content, err := io.ReadAll(file)
 					if err != nil {
 						fmt.Println("Error reading from file: "+err.Error())
 						return
 					}
-					fmt.Println(string(content))
+					// Remove empty bytes and whitespaces from byte array
+					final = bytes.TrimSpace(content)
+					final = bytes.ReplaceAll(final, []byte(" "), []byte(""))
+					fmt.Print(string(final))
 					//// seek to end of file for appending
 					//tmpFile.Seek(0,2)
 					//// append wordlist to tempfile
