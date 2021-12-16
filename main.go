@@ -60,7 +60,8 @@ func main() {
 
 	for _,path := range filePaths{
 		for _,tech := range stackItems{
-			if strings.Contains(strings.ToLower(strings.TrimSuffix(path,".txt")),strings.ToLower(tech)){
+			// if path as a whole word is in tech
+			if strings.Contains(strings.ToLower(tech),strings.ToLower(strings.TrimSuffix(path,".txt"))){
 				if !stringInSlice(path,wordlists){
 					wordlists = append(wordlists, path)
 					//fmt.Println(wordlists)
